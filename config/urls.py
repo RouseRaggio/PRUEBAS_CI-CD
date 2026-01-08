@@ -5,11 +5,14 @@ from django.contrib import admin
 from django.http import HttpResponse
 
 router = DefaultRouter()
-router.register(r'products', ProductViewSet)
+router.register(r"products", ProductViewSet)
+
 
 def home(request):
     return HttpResponse("🚀 API funcionando correctamente")
+
+
 urlpatterns = [
-    path("", home), 
-    path('api/', include(router.urls)),
+    path("", home),
+    path("api/", include(router.urls)),
 ]
