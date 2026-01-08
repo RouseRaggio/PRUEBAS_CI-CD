@@ -34,18 +34,25 @@ jobs:
 
     services:
       postgres:
-        image: postgres:17
+        image: postgres:15
         env:
-          POSTGRES_DB: ${{ secrets.DB_NAME }}
-          POSTGRES_USER: ${{ secrets.DB_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          POSTGRES_DB: test_db
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
         ports:
           - 5432:5432
         options: >-
-          --health-cmd="pg_isready -U Rouse"
+          --health-cmd="pg_isready -U test_user"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
+
+    env:
+      DB_NAME: test_db
+      DB_USER: test_user
+      DB_PASSWORD: test_password
+      DB_HOST: localhost
+      DB_PORT: 5432
 
     steps:
       - uses: actions/checkout@v4
@@ -61,24 +68,13 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run migrations
-        env:
-          DB_NAME: myproject_db
-          DB_USER: Rouse
-          DB_PASSWORD: secret
-          DB_HOST: localhost
-          DB_PORT: 5432
         run: |
           python manage.py migrate
 
       - name: Run tests
-        env:
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_HOST: localhost
-          DB_PORT: 5432
         run: |
-          pytest products/tests.py
+          pytest
+
 
   build:
     name: Build Docker Image
@@ -91,4 +87,3 @@ jobs:
       - name: Build image
         run: |
           docker build -t proyect_ci:latest .
-
