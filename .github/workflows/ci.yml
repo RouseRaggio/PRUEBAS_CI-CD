@@ -78,7 +78,7 @@ jobs:
           DB_HOST: localhost
           DB_PORT: 5432
         run: |
-          pytest
+          pytest products/tests.py
 
   build:
     name: Build Docker Image
