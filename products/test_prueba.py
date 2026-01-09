@@ -1,4 +1,4 @@
-from ejemplo import suma
+from .ejemplo import suma
 import pytest
 
 
